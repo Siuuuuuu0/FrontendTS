@@ -11,17 +11,19 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         getUsers: builder.query({
             query : () => ({
                 url : '/users', 
-                validateStatus : (response, result) => {
+                validateStatus : (response: any, result: any) => {
                     return response.status === 200 && !result.isError
                 }, 
             }), 
             transformResponse : responseData => {
-                const loadedUsers = responseData.map(user=>{
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
+                const loadedUsers = responseData.map((user: any) => {
                     user.id = user._id 
                     return user
                 })
                 return usersAdapter.setAll(initialState, loadedUsers);
             },
+            // @ts-expect-error TS(2322): Type '(result: EntityState<{ id: EntityId; }, Enti... Remove this comment to see the full error message
             providesTags : (result, error, arg) => {
                 if(result?.ids){
                     return [
@@ -95,6 +97,7 @@ export const {
     useDeleteUserMutation
 } = usersApiSlice
 
+// @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select()
 
 const selectUsersData = createSelector(
@@ -106,4 +109,5 @@ export const {
     selectAll : selectAllUsers, 
     selectById : selectUserById, 
     selectIds : selectUserIds
+// @ts-expect-error TS(2345): Argument of type 'unknown' is not assignable to pa... Remove this comment to see the full error message
 } = usersAdapter.getSelectors(state => selectUsersData(state) ?? initialState)

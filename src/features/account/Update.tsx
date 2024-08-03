@@ -1,3 +1,4 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import React, { useEffect, useState, useRef } from 'react';
 import { useConfirmUpdateEmailMutation, useConfirmUpdatePasswordMutation } from './accountApiSlice';
 import { PulseLoader } from 'react-spinners';
@@ -34,6 +35,7 @@ const Update = () => {
                 navigate('/dash/settings');
             } catch (err) {
                 console.log(err)
+                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 setErrMsg(err.data?.message);
                 // errRef.current.focus();
             }
@@ -45,27 +47,42 @@ const Update = () => {
     const isLoading = isUpdatingEmail || isUpdatingPassword;
     const errClass = errMsg ? 'errmsg' : 'offscreen';
 
+    // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
     if (isLoading) return <PulseLoader color={'#FFF'} />;
 
     return (
+        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         <section className="public">
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             <header>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <h1>{isEmailUpdate ? 'Update Email' : 'Update Password'}</h1>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </header>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             <main className="login">
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <p ref={errRef} className={errClass} aria-live="assertive">
                     {errMsg}
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 </p>
 
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <p className="form__message">
                     {isEmailUpdate
                         ? 'Your email is being updated.'
                         : 'Your password is being updated.'}
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 </p>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </main>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             <footer>
+                // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
                 <Link to="/">Back to Home</Link>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </footer>
+        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         </section>
     );
 };

@@ -27,6 +27,6 @@ export const { setCredentials, logOut, setEmailOrUser, setGoogleId } = authSlice
 
 export default authSlice.reducer
 
-export const selectCurrentToken = (state) => state.auth.token
-export const selectCurrentGoogleId = (state) => state.auth.googleId
-export const selectCurrentUserOrMail = (state) => state.auth.userOrMail
+export const selectCurrentToken = (state: any) => state.auth.token
+export const selectCurrentGoogleId = (state: any) => state.auth.googleId
+export const selectCurrentUserOrMail = (state: any) => state.auth.userOrMail

@@ -1,3 +1,4 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useConfirmResetPasswordMutation } from './authApiSlice';
@@ -27,10 +28,10 @@ const ConfirmReset = () => {
         setErrMsg('');
     }, [password, confirmPassword]);
 
-    const handlePasswordInput = (e) => setPassword(e.target.value);
-    const handleConfirmPasswordInput = (e) => setConfirmPassword(e.target.value);
+    const handlePasswordInput = (e: any) => setPassword(e.target.value);
+    const handleConfirmPasswordInput = (e: any) => setConfirmPassword(e.target.value);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         if (password !== confirmPassword || !validPassword) {
             setErrMsg('Passwords do not match');
@@ -43,24 +44,35 @@ const ConfirmReset = () => {
             setConfirmPassword('');
             navigate('/login');
         } catch (err) {
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             setErrMsg(err.data?.message || 'An error occurred');
         }
     };
 
     const errClass = errMsg ? "errmsg" : "offscreen";
 
+    // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
     if (isLoading) return <PulseLoader color={"#FFF"} />;
 
     return (
+        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         <section className="public">
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             <header>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <h1>Reset Password</h1>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </header>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             <main className="login">
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
 
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <form className="form" onSubmit={handleSubmit}>
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <label htmlFor="password">New Password:</label>
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <input
                         className="form__input"
                         type="password"
@@ -70,7 +82,9 @@ const ConfirmReset = () => {
                         required
                     />
 
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <label htmlFor="confirmPassword">Confirm Password:</label>
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <input
                         className="form__input"
                         type="password"
@@ -79,9 +93,13 @@ const ConfirmReset = () => {
                         value={confirmPassword}
                         required
                     />
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <button className="form__submit-button">Reset Password</button>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 </form>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </main>
+        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         </section>
     );
 };

@@ -19,6 +19,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 try {
                     const { data } = await queryFulfilled
                     console.log(data)
+                    // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
                     dispatch(logOut())
                     setTimeout(() => {
                         dispatch(apiSlice.util.resetApiState())
