@@ -5,6 +5,9 @@ const baseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:3500',
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
+
+
+
         // @ts-expect-error TS(2571): Object is of type 'unknown'.
         const token = getState().auth.token
 
@@ -26,6 +29,9 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
         if (refreshResult?.data) {
 
+
+
+
             // @ts-expect-error TS(2698): Spread types may only be created from object types... Remove this comment to see the full error message
             api.dispatch(setCredentials({ ...refreshResult.data }))
 
@@ -33,6 +39,9 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
         } else {
 
             if (refreshResult?.error?.status === 403) {
+
+
+
                 // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 refreshResult.error.data.message = "Your login has expired."
             }

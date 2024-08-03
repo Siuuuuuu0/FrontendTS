@@ -1,4 +1,5 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'reac... Remove this comment to see the full error message
+
+
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -12,7 +13,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useSendLogoutMutation } from '../features/auth/authApiSlice'
 // import useAuth from '../hooks/useAuth'
 import PulseLoader from 'react-spinners/PulseLoader'
-// @ts-expect-error TS(6142): Module '../context/profilePictureContext' was reso... Remove this comment to see the full error message
+
 import { useProfilePicture } from '../context/profilePictureContext'
 // import useProfilePicture from '../hooks/useProfilePicture'
 
@@ -26,6 +27,8 @@ const Header = () => {
     const navigate = useNavigate()
 
     const [isLogoutSuccess, setIsLogoutSuccess] = useState(false)
+
+    // @ts-expect-error TS(2339): Property 'profilePictureLS' does not exist on type... Remove this comment to see the full error message
     const {profilePictureLS, handleChange} = useProfilePicture()
     const [imageSrc, setImageSrc] = useState("");
 
@@ -34,6 +37,7 @@ const Header = () => {
         if (profilePictureLS) {
         setImageSrc(profilePictureLS.image);
         }
+        // @ts-expect-error TS(2345): Argument of type 'null' is not assignable to param... Remove this comment to see the full error message
         else setImageSrc(null)
     }, [profilePictureLS]);
     // const {setProfilePictureLS} = useProfilePicture()
@@ -117,12 +121,16 @@ const Header = () => {
     // }
 
     const logoutButton = (
-        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
+
         <button
             className="icon-button"
             title="Logout"
             onClick={() => {
                 try {
+
+
+
                     // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
                     sendLogout().unwrap()
                     setIsLogoutSuccess(true)
@@ -134,6 +142,7 @@ const Header = () => {
             // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
             <FontAwesomeIcon icon={faRightFromBracket} />
         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         </button>
     )
 
@@ -141,11 +150,11 @@ const Header = () => {
 
     let buttonContent
     if (isLoading) {
-        // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
+
         buttonContent = <PulseLoader color={"#FFF"} />
     } else {
         buttonContent = (
-            // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
+
             <>
                 {/* {newNoteButton} */}
                 {/* {newUserButton} */}
@@ -157,36 +166,49 @@ const Header = () => {
     }
 
     const content = (
-        // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
+
+
         <>
             // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+            // @ts-expect-error TS(2339): Property 'data' does not exist on type 'FetchBaseQ... Remove this comment to see the full error message
+            // @ts-expect-error TS(2339): Property 'data' does not exist on type 'FetchBaseQ... Remove this comment to see the full error message
             <p className={errClass}>{error?.data?.message}</p>
 
             // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             <header className="dash-header">
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <div className={`dash-header__container`}>
                     // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
                     <Link to="/dash">
                         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         <h1 className="dash-header__title">techNotes</h1>
                     </Link>
 
                     {imageSrc ? (
-                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
+
                         <img src={imageSrc} alt="Stored in localStorage" style={{width : '100px', height : 'auto'}}/>
                     ) : (
-                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
+
                         <p>No image</p>
                     )}
                     
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <nav className="dash-header__nav">
                         {buttonContent}
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     </nav>
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 </div>
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </header>
         </>

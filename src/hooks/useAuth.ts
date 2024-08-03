@@ -9,6 +9,9 @@ const useAuth = () => {
 
     if (token) {
         const decoded = jwtDecode(token)
+
+
+
         // @ts-expect-error TS(2339): Property 'Info' does not exist on type 'JwtPayload... Remove this comment to see the full error message
         const { username, roles, email, id } = decoded.Info
 

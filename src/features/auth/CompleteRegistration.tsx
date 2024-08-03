@@ -1,4 +1,5 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'reac... Remove this comment to see the full error message
+
+
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -11,7 +12,7 @@ import usePersist from "../../hooks/usePersist"
 import { useGetUsernamesMutation, useAddUsernameMutation } from "../../app/api/usernameApiSlice"
 import { USER_REGEX, PWD_REGEX, FIRSTNAME_REGEX, LASTNAME_REGEX} from "../../config/regex"
 import { useUploadProfilePictureMutation } from "../account/accountApiSlice"
-// @ts-expect-error TS(6142): Module '../../context/profilePictureContext' was r... Remove this comment to see the full error message
+
 import { useProfilePicture } from "../../context/profilePictureContext"
 // import useProfilePicture from "../../hooks/useProfilePicture"
 
@@ -23,8 +24,14 @@ const CompleteRegister = () => {
     const [persist, setPersist] = usePersist()
 
     const dispatch = useDispatch()
+
+
+
     // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const email = useSelector((state) => state.auth.userOrMail)
+
+
+
     // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const googleId = useSelector((state) => state.auth.googleId)
 
@@ -50,6 +57,8 @@ const CompleteRegister = () => {
     const [suggestedUsernames, setSuggestedUsernames] = useState([])
     const [displayUsernames, setDisplayUsernames] = useState(false)
     const [profilePicture, setProfilePicture] = useState(null)
+
+    // @ts-expect-error TS(2339): Property 'handleChange' does not exist on type 'un... Remove this comment to see the full error message
     const {handleChange} = useProfilePicture()
     
     const [getUsernames] = useGetUsernamesMutation()
@@ -85,6 +94,9 @@ const CompleteRegister = () => {
             if(validFirstName && validLastName) {
                 try{
                     const {usernames} = await getUsernames({first_name : firstName, last_name : lastName}).unwrap()
+
+
+
                     // @ts-expect-error TS(2550): Property 'values' does not exist on type 'ObjectCo... Remove this comment to see the full error message
                     const usernameArray = Object.values(usernames)
                     setSuggestedUsernames(usernameArray)
@@ -156,6 +168,9 @@ const CompleteRegister = () => {
         if(validFirstName && validLastName) {
             try{
                 const {usernames} = await getUsernames({first_name : firstName, last_name : lastName}).unwrap()
+
+
+
                 // @ts-expect-error TS(2550): Property 'values' does not exist on type 'ObjectCo... Remove this comment to see the full error message
                 const usernameArray = Object.values(usernames)
                 setSuggestedUsernames(usernameArray)
@@ -173,19 +188,28 @@ const CompleteRegister = () => {
     const validLastNameClass = !validLastName ? 'form__input--incomplete' : ''
 
     const content = (
-        // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
+
+
         <>
             // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+            // @ts-expect-error TS(2339): Property 'data' does not exist on type 'FetchBaseQ... Remove this comment to see the full error message
+            // @ts-expect-error TS(2339): Property 'data' does not exist on type 'FetchBaseQ... Remove this comment to see the full error message
             <p className={errClass}>{error?.data?.message}</p>
 
             // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             <form className="form" onSubmit={onSaveUserClicked}>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <div className="form__title-row">
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <h2>New User</h2>
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <div className="form__action-buttons">
+                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         <button
                             className="icon-button"
@@ -195,16 +219,22 @@ const CompleteRegister = () => {
                             // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
                             <FontAwesomeIcon icon={faSave} />
                         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         </button>
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     </div>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 </div>
 
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <label className="form__label" htmlFor="username">
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     First Name: <span className="nowrap">[3-40 letters]</span></label>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <input
                     className={`form__input ${validFirstNameClass}`}
@@ -217,9 +247,12 @@ const CompleteRegister = () => {
                 />
 
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <label className="form__label" htmlFor="username">
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     Last Name: <span className="nowrap">[3-40 letters]</span></label>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <input
                     className={`form__input ${validLastNameClass}`}
@@ -232,19 +265,24 @@ const CompleteRegister = () => {
                 />
 
                 {displayUsernames && (
-                    // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
+
                     <>
+                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         <div className="suggestions">
                             {suggestedUsernames.map((suggestion: any, index: any) => (
-                                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
+
                                 <div key={index} className="suggestion" onClick={() => setUsername(suggestion)}>
                                     {suggestion}
+                                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                                 </div>
                             ))}
                         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         </div>
+                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         <button
                             type="button"
@@ -255,6 +293,7 @@ const CompleteRegister = () => {
                             // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
                             <FontAwesomeIcon icon={faSyncAlt} />
                         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                         </button>
                     </>
                 )
@@ -263,9 +302,12 @@ const CompleteRegister = () => {
 
 
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <label className="form__label" htmlFor="username">
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     Username: <span className="nowrap">[letters, numbers, special characters except @]</span></label>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <input
                     className={`form__input ${validUserClass}`}
@@ -278,9 +320,12 @@ const CompleteRegister = () => {
                 />
 
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <label className="form__label" htmlFor="password">
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     Password: <span className="nowrap">[4-12 chars incl. !@#$%]</span></label>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <input
                     className={`form__input ${validPwdClass}`}
@@ -292,10 +337,13 @@ const CompleteRegister = () => {
                 />
 
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <label className="form__label" htmlFor="profilePicture">
                     Profile Picture:
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 </label>
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <input
                     className="form__input"
@@ -307,7 +355,9 @@ const CompleteRegister = () => {
                 />
 
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <label htmlFor="persist" className="form__persist">
+                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                     <input
                         type="checkbox"
@@ -318,8 +368,10 @@ const CompleteRegister = () => {
                     />
                     Trust This Device
                 // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 </label>
 
+            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </form>
         </>

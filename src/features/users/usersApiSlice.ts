@@ -16,6 +16,9 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 }, 
             }), 
             transformResponse : responseData => {
+
+
+
                 // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 const loadedUsers = responseData.map((user: any) => {
                     user.id = user._id 
@@ -23,6 +26,9 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 })
                 return usersAdapter.setAll(initialState, loadedUsers);
             },
+
+
+
             // @ts-expect-error TS(2322): Type '(result: EntityState<{ id: EntityId; }, Enti... Remove this comment to see the full error message
             providesTags : (result, error, arg) => {
                 if(result?.ids){
@@ -96,6 +102,9 @@ export const {
     useUpdateUserMutation, 
     useDeleteUserMutation
 } = usersApiSlice
+
+
+
 
 // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select()
