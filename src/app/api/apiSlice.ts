@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setCredentials } from '../../features/auth/authSlice'
+import { createApi, fetchBaseQuery, RootState } from '@reduxjs/toolkit/query/react';
+import { setCredentials } from '../../features/auth/authSlice';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:3500',
@@ -9,7 +9,7 @@ const baseQuery = fetchBaseQuery({
 
 
         // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        const token = getState().auth.token
+        const token = (getState() as RootState).auth.token
 
         if (token) {
             headers.set("authorization", `Bearer ${token}`)
@@ -28,21 +28,11 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
         const refreshResult = await baseQuery('/auth/refresh', api, extraOptions)
 
         if (refreshResult?.data) {
-
-
-
-
-            // @ts-expect-error TS(2698): Spread types may only be created from object types... Remove this comment to see the full error message
             api.dispatch(setCredentials({ ...refreshResult.data }))
-
             result = await baseQuery(args, api, extraOptions)
         } else {
 
             if (refreshResult?.error?.status === 403) {
-
-
-
-                // @ts-expect-error TS(2571): Object is of type 'unknown'.
                 refreshResult.error.data.message = "Your login has expired."
             }
             return refreshResult
