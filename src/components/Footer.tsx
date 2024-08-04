@@ -14,7 +14,6 @@ const Footer = () => {
         // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
         // @ts-expect-error TS(2304): Cannot find name 'className'.
         // @ts-expect-error TS(2304): Cannot find name 'className'.
-        // @ts-expect-error TS(2322): Type '{ className: string; }' is not assignable to... Remove this comment to see the full error message
         <MdLocalPhone className='phone-icon'/>
         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
@@ -79,7 +78,6 @@ const Footer = () => {
         // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
         // @ts-expect-error TS(2304): Cannot find name 'className'.
         // @ts-expect-error TS(2304): Cannot find name 'className'.
-        // @ts-expect-error TS(2322): Type '{ className: string; }' is not assignable to... Remove this comment to see the full error message
         <IoMailOutline className='email-icon'/>
         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message

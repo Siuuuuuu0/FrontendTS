@@ -1,40 +1,97 @@
+import { createContext, ReactElement, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-
-// @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
-const ProfilePictureContext = createContext();
-
-export const useProfilePicture = () => {
-    return useContext(ProfilePictureContext);
+type ProfilePictureType = {
+    image: string | null;
 };
 
-export const ProfilePictureProvider = ({
-    children
-}: any) => {
-    const [profilePictureLS, setProfilePictureLS] = useState(() => {
-        const savedProfilePicture = localStorage.getItem("profilePicture");
-        return savedProfilePicture ? JSON.parse(savedProfilePicture) : null;
-    });
+type ProfilePictureStateType = {
+    profilePictureLS: ProfilePictureType | null;
+};
 
-    const handleChange = (newProfilePicture: any) => {
-        setProfilePictureLS(newProfilePicture);
+const initProfilePictureState: ProfilePictureStateType = {
+    profilePictureLS: null,
+};
+
+const REDUCER_ACTION_TYPE = {
+    SET: 'SET',
+    CLEAR: 'CLEAR',
+};
+
+// type ReducerActionType = typeof REDUCER_ACTION_TYPE;
+
+type ReducerAction = {
+    type: string;
+    payload?: ProfilePictureType;
+};
+
+const reducer = (state: ProfilePictureStateType, action: ReducerAction): ProfilePictureStateType => {
+    switch (action.type) {
+        case REDUCER_ACTION_TYPE.SET: {
+            if (!action.payload) {
+                throw new Error('action payload missing in SET action');
+            }
+            return { ...state, profilePictureLS: action.payload };
+        }
+        case REDUCER_ACTION_TYPE.CLEAR: {
+            return { ...state, profilePictureLS: null };
+        }
+        default:
+            throw new Error('no reducer type');
+    }
+};
+
+const useProfilePictureContext = (initProfilePictureState: ProfilePictureStateType) => {
+    const [state, dispatch] = useReducer(reducer, initProfilePictureState);
+    const REDUCER_ACTIONS = useMemo(() => {
+        return REDUCER_ACTION_TYPE;
+    }, []);
+
+    const handleChange = (newProfilePicture: ProfilePictureType | null) => {
+        if (newProfilePicture) {
+            dispatch({ type: REDUCER_ACTIONS.SET, payload: newProfilePicture });
+        } else {
+            dispatch({ type: REDUCER_ACTIONS.CLEAR });
+        }
     };
 
     useEffect(() => {
-        if (profilePictureLS !== null) {
-            localStorage.setItem("profilePicture", JSON.stringify(profilePictureLS));
-        } else {
-            localStorage.removeItem("profilePicture");
+        const savedProfilePicture = localStorage.getItem('profilePicture');
+        if (savedProfilePicture) {
+            dispatch({ type: REDUCER_ACTIONS.SET, payload: JSON.parse(savedProfilePicture) });
         }
-    }, [profilePictureLS]);
+    }, [dispatch, REDUCER_ACTIONS.SET]);
 
+    useEffect(() => {
+        if (state.profilePictureLS !== null) {
+            localStorage.setItem('profilePicture', JSON.stringify(state.profilePictureLS));
+        } else {
+            localStorage.removeItem('profilePicture');
+        }
+    }, [state.profilePictureLS]);
+
+    return { profilePictureLS: state.profilePictureLS, handleChange, REDUCER_ACTIONS };
+};
+
+export type useProfilePictureContextType = ReturnType<typeof useProfilePictureContext>;
+
+const initProfilePictureContextState: useProfilePictureContextType = {
+    profilePictureLS: null,
+    handleChange: () => {},
+    REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
+};
+
+export const ProfilePictureContext = createContext<useProfilePictureContextType>(initProfilePictureContextState);
+
+type ChildrenType = { children?: ReactElement | ReactElement[] };
+
+export const ProfilePictureProvider = ({ children }: ChildrenType): ReactElement => {
     return (
-
-
-        <ProfilePictureContext.Provider value={{ profilePictureLS, handleChange }}>
+        <ProfilePictureContext.Provider value={useProfilePictureContext(initProfilePictureState)}>
             {children}
         </ProfilePictureContext.Provider>
     );
+};
+
+export const useProfilePicture = (): useProfilePictureContextType => {
+    return useContext(ProfilePictureContext);
 };
