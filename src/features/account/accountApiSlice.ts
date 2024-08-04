@@ -2,9 +2,30 @@ import { apiSlice } from "../../app/api/apiSlice";
 import { logOut } from "../auth/authSlice";
 import { setAccount } from "./accountSlice";
 
+type AtLeastOne<T> = {
+    [K in keyof T]: Pick<T, K> & Partial<Omit<T, K>>;
+}[keyof T];
+
+type UpdateAccountPayload = {
+    id: string, 
+    toUpdate : AtLeastOne<{
+        email?: string, 
+        password?: string, 
+        username?: string
+    }>
+};
+type DeleteAccountPayload = { id: string };
+type GetAccountPayload = { id: string };
+type ConfirmUpdatePasswordPayload = { token: string };
+type ConfirmUpdateEmailPayload = { token: string };
+type UploadProfilePicturePayload = FormData;
+type DeleteProfilePicturePayload = { id: string };
+type ChangeProfilePicturePayload = FormData;
+type GetProfilePicturePayload = { id: string };
+
 export const accountApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
-        updateAccount: builder.mutation({
+        updateAccount: builder.mutation<any, UpdateAccountPayload>({
             query: initialUserData => ({
                 url: '/update',
                 method: 'PATCH',

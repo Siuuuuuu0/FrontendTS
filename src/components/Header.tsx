@@ -43,7 +43,7 @@ const Header: React.FC = () => {
             title="Logout"
             onClick={async() => {
                 try {
-                    await sendLogout().unwrap()
+                    await sendLogout({}).unwrap()
                     setIsLogoutSuccess(true)
                 }catch(err){
 

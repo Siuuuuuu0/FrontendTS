@@ -72,7 +72,7 @@ const useProfilePictureContext = (initProfilePictureState: ProfilePictureStateTy
     return { profilePictureLS: state.profilePictureLS, handleChange, REDUCER_ACTIONS };
 };
 
-export type useProfilePictureContextType = ReturnType<typeof useProfilePictureContext>;
+type useProfilePictureContextType = ReturnType<typeof useProfilePictureContext>;
 
 const initProfilePictureContextState: useProfilePictureContextType = {
     profilePictureLS: null,
@@ -80,7 +80,7 @@ const initProfilePictureContextState: useProfilePictureContextType = {
     REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
 };
 
-export const ProfilePictureContext = createContext<useProfilePictureContextType>(initProfilePictureContextState);
+const ProfilePictureContext = createContext<useProfilePictureContextType>(initProfilePictureContextState);
 
 type ChildrenType = { children?: ReactElement | ReactElement[] };
 
