@@ -22,7 +22,6 @@ const Settings = ({
     const [changeProfilePicture] = useChangeProfilePictureMutation();
     const [uploadProfilePicture] = useUploadProfilePictureMutation();
 
-    // @ts-expect-error TS(2339): Property 'profilePictureLS' does not exist on type... Remove this comment to see the full error message
     const {profilePictureLS, handleChange} = useProfilePicture()
 
     const navigate = useNavigate();
@@ -143,7 +142,7 @@ const Settings = ({
 
     const onDeletePPClicked = async () => {
         try {
-            const data = await deleteProfilePicture({id : profilePictureLS.id}).unwrap()
+            const data = await deleteProfilePicture({id : profilePictureLS?.id}).unwrap()
             console.log(data)
             handleChange(null)
         }catch(err){

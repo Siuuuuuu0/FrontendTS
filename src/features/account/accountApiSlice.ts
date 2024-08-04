@@ -34,7 +34,7 @@ export const accountApiSlice = apiSlice.injectEndpoints({
                 }
             })
         }),
-        deleteAccount: builder.mutation({
+        deleteAccount: builder.mutation<any, DeleteAccountPayload>({
             query: ({ id }) => ({
                 url: `/update`,
                 method: 'DELETE',
@@ -57,7 +57,7 @@ export const accountApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
-        getAccount: builder.query({
+        getAccount: builder.query<any, GetAccountPayload>({
             query: ({ id }) => ({
                 url: `/users/:${id}`,
                 method: 'GET'
@@ -71,19 +71,19 @@ export const accountApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }), 
-        confirmUpdatePassword : builder.mutation({
+        confirmUpdatePassword : builder.mutation<any, ConfirmUpdatePasswordPayload>({
             query : ({token}) => ({
                 url : `/update/update-password?token=${token}`, 
                 method : 'PATCH', 
             }),
         }), 
-        confirmUpdateEmail : builder.mutation({
+        confirmUpdateEmail : builder.mutation<any, ConfirmUpdateEmailPayload>({
             query : ({token}) => ({
                 url : `/update/update-email?token=${token}`, 
                 method : 'PATCH', 
             })
         }), 
-        uploadProfilePicture :  builder.mutation({
+        uploadProfilePicture :  builder.mutation<any, UploadProfilePicturePayload>({
             query : formData => ({
                 url : '/account/upload-profile-picture', 
                 method : 'POST', 

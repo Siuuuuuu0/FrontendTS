@@ -24,25 +24,26 @@ const Update = () => {
 
     useEffect(() => {
         const update = async () => {
-            try {
-                if (isEmailUpdate) {
-                    const{accessToken} = await updateEmail({ token }).unwrap();
-                    dispatch(setCredentials({accessToken}))
-                } else {
-                    const{accessToken} = await updatePassword({ token }).unwrap();
-                    dispatch(setCredentials({accessToken}))
+            if(token)
+                try {
+                    if (isEmailUpdate) {
+                        const{accessToken} = await updateEmail({ token }).unwrap();
+                        dispatch(setCredentials({accessToken}))
+                    } else {
+                        const{accessToken} = await updatePassword({ token }).unwrap();
+                        dispatch(setCredentials({accessToken}))
+                    }
+
+                    navigate('/dash/settings');
+                } catch (err) {
+                    console.log(err)
+
+
+
+                    // @ts-expect-error TS(2571): Object is of type 'unknown'.
+                    setErrMsg(err.data?.message);
+                    // errRef.current.focus();
                 }
-
-                navigate('/dash/settings');
-            } catch (err) {
-                console.log(err)
-
-
-
-                // @ts-expect-error TS(2571): Object is of type 'unknown'.
-                setErrMsg(err.data?.message);
-                // errRef.current.focus();
-            }
         };
 
         update();

@@ -1,7 +1,8 @@
 import { createContext, ReactElement, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 
 type ProfilePictureType = {
-    image: string | null;
+    image: string | null, 
+    id : string | null
 };
 
 type ProfilePictureStateType = {
