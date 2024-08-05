@@ -1,5 +1,3 @@
-
-
 import React, { useState, useRef } from 'react'
 import { useConfirmCodeMutation } from './authApiSlice'
 import { setCredentials } from './authSlice'
@@ -7,130 +5,76 @@ import { PulseLoader } from 'react-spinners'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { useGetProfilePictureMutation } from '../account/accountApiSlice'
-
 import { useProfilePicture } from '../../context/profilePictureContext'
+import { ErrorType, handleError } from "../../services/helpers"
 
-const ConfirmCode = () => {
+const ConfirmCode: React.FC = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const errRef = useRef()
+    const errRef: React.RefObject<HTMLParagraphElement> = useRef<HTMLParagraphElement>(null)
 
-    const [code, setCode] = useState('')
-    const [errMsg, setErrMsg] = useState('')
+    const [code, setCode] = useState<string>('')
+    const [errMsg, setErrMsg] = useState<string>('')
 
     const [confirm,  { isLoading }] = useConfirmCodeMutation()
     const [getProfilePicture] = useGetProfilePictureMutation()
 
-    // @ts-expect-error TS(2339): Property 'handleChange' does not exist on type 'un... Remove this comment to see the full error message
-    const {handleChange} = useProfilePicture()
+    const { handleChange } = useProfilePicture()
 
+    const userOrMail:string = useSelector((state: { auth: { userOrMail: string } }) => state.auth.userOrMail);
 
-
-
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
-    const userOrMail = useSelector((state) => state.auth.userOrMail);
-
-    const handleProfilePicture = async (userId: any) => {
+    const handleProfilePicture = async (userId: string): Promise<void> => {
         try {
-            const {id, image} = await getProfilePicture({id : userId}).unwrap()
-            console.log({id, image})
-            handleChange({id, image})
-        }catch(err){
-            // console.error(err)
+            const { id, image } = await getProfilePicture({ id: userId }).unwrap()
+            // console.log({ id, image })
+            handleChange({ id, image })
+        } catch (err) {
+            setErrMsg(handleError(err as ErrorType))
         }
     }
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+        e.preventDefault()
         try {
-            const { accessToken, id } = await confirm({code, userOrMail}).unwrap()
+            const { accessToken, id } = await confirm({ code, userOrMail }).unwrap()
             dispatch(setCredentials({ accessToken }))
-            handleProfilePicture(id)
+            await handleProfilePicture(id)
             setCode('')
             navigate('/dash')
         } catch (err) {
-
-
-
-            // @ts-expect-error TS(2571): Object is of type 'unknown'.
-            setErrMsg(err.data?.message);
-            // errRef.current.focus();
+            setErrMsg(handleError(err as ErrorType))
+            if (errRef.current) {
+                errRef.current.focus()
+            }
         }
     }
 
-    const handleCodeInput = (e: any) => setCode(e.target.value)
-
-    const errClass = errMsg ? "errmsg" : "offscreen"
-
-
-
-    if (isLoading) return <PulseLoader color={"#FFF"} />
+    const handleCodeInput = (e: React.ChangeEvent<HTMLInputElement>): void => setCode(e.target.value)
 
     return (
-
-
-        <section className="public">
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+        <section>
             <header>
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
                 <h1>Confirm Code</h1>
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </header>
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            <main className="login">
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(2339): Property 'undefined' does not exist on type 'JSX.I... Remove this comment to see the full error message
-                // @ts-expect-error TS(2322): Type 'MutableRefObject<undefined>' is not assignab... Remove this comment to see the full error message
-                // @ts-expect-error TS(2322): Type 'MutableRefObject<undefined>' is not assignab... Remove this comment to see the full error message
-                <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
-
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                <form className="form" onSubmit={handleSubmit}>
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    <label htmlFor='Email Code'>
-                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                        <input
-                            className="form__input"
-                            type="code"
-                            id="code"
-                            onChange={handleCodeInput}
-                            value={code}
-                            required
-                        />
-                        
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    </label>
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    <button className="form__submit-button">Confirm Code</button>
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+            <main>
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="code">Confirmation Code</label>
+                    <input
+                        type="text"
+                        id="code"
+                        value={code}
+                        onChange={handleCodeInput}
+                        required
+                    />
+                    {isLoading ? <PulseLoader /> : <button type="submit">Confirm Code</button>}
                 </form>
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+                {errMsg && <p ref={errRef} aria-live="assertive">{errMsg}</p>}
             </main>
-            // @ts-expect-error TS(2578): Unused '@ts-expect-error' directive.
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            // @ts-expect-error TS(2578): Unused '@ts-expect-error' directive.
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             <footer>
-                // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
                 <Link to="/">Back to Home</Link>
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
             </footer>
-        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-        // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         </section>
     )
 }

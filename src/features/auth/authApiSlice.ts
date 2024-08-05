@@ -45,12 +45,12 @@ type ConfirmRegistrationResponse = {
 type RefreshResponse = {
     accessToken: string
 }
-type GL = {
+export type GL = {
     toRegister: boolean, 
     email: string, 
     googleId: string
 }
-type GoogleLoginResponse = ConfirmResponse | GL
+export type GoogleLoginResponse = ConfirmResponse | GL
 
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
