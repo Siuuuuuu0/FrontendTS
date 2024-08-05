@@ -1,24 +1,25 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useLoginMutation, useGoogleLoginMutation } from './authApiSlice';
+import { useLoginMutation, useGoogleLoginMutation, GL, GoogleLoginResponse, ConfirmResponse } from './authApiSlice';
 import usePersist from '../../hooks/usePersist';
 import useTitle from '../../hooks/useTitle';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { setCredentials, setEmailOrUser, setGoogleId } from './authSlice';
-import { GoogleLogin } from '@react-oauth/google';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode'; // Corrected import statement
 import { useGetProfilePictureMutation } from '../account/accountApiSlice';
 import { useProfilePicture } from '../../context/profilePictureContext';
+import { ErrorType, handleError } from '../../services/helpers';
 
 const Login = () => {
     useTitle('Login');
 
-    const userRef = useRef<HTMLInputElement>(null);
-    const errRef = useRef<HTMLParagraphElement>(null);
-    const [userOrMail, setUserOrMail] = useState('');
-    const [password, setPassword] = useState('');
-    const [errMsg, setErrMsg] = useState('');
+    const userRef: React.RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
+    const errRef: React.RefObject<HTMLParagraphElement> = useRef<HTMLParagraphElement>(null);
+    const [userOrMail, setUserOrMail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [errMsg, setErrMsg] = useState<string>('');
     const [persist, setPersist] = usePersist();
 
     const { handleChange } = useProfilePicture();
@@ -40,7 +41,7 @@ const Login = () => {
         setErrMsg('');
     }, [userOrMail, password]);
 
-    const handleProfilePicture = async (userId: string) => {
+    const handleProfilePicture = async (userId: string): Promise<void> => {
         try {
             const { id, image } = await getProfilePicture({ id: userId }).unwrap();
             handleChange({ id, image });
@@ -49,7 +50,7 @@ const Login = () => {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         try {
             await login({ userOrMail, password }).unwrap();
@@ -70,44 +71,49 @@ const Login = () => {
         }
     };
 
-    const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => setUserOrMail(e.target.value);
-    const handlePwdInput = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
-    const handleToggle = () => setPersist((prev: boolean) => !prev);
+    const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>): void => setUserOrMail(e.target.value);
+    const handlePwdInput = (e: React.ChangeEvent<HTMLInputElement>): void => setPassword(e.target.value);
+    const handleToggle = (): void => setPersist((prev: boolean) => !prev);
 
-    const handleGoogleLoginSuccess = async (response: any) => {
-        const userObject: any = jwtDecode(response.credential);
-        try {
-            const data = await googleLogin({
-                email: userObject.email,
-                name: userObject.name,
-                googleId: userObject.sub || '',
-            }).unwrap();
+    const isGL = (response: GoogleLoginResponse): response is GL => {
+        return (response as GL).toRegister !== undefined;
+    }
 
-            setUserOrMail('');
-            setPassword('');
+    const handleGoogleLoginSuccess = async (response: CredentialResponse): Promise<void> => {
+        const userObject: any = jwtDecode(response.credential ?? '');
+        if(userObject){
+            try {
+                const data: GoogleLoginResponse = await googleLogin({
+                    email: userObject.email,
+                    name: userObject.name,
+                    googleId: userObject.sub || '',
+                }).unwrap();
 
-            if (data.toRegister) {
-                const { email, googleId } = data;
-                dispatch(setEmailOrUser({ userOrMail: email }));
-                dispatch(setGoogleId({ googleId }));
-                navigate('/complete-register');
-            } else if (data.accessToken) {
-                setPersist(true);
-                const { accessToken } = data;
-                dispatch(setCredentials({ accessToken }));
-                handleProfilePicture(data.id);
-                navigate('/dash');
-            } else {
-                setErrMsg(data.message || 'Google login failed');
+                setUserOrMail('');
+                setPassword('');
+
+                if (isGL(data)) {
+                    const { email, googleId } = data;
+                    dispatch(setEmailOrUser({ userOrMail: email }));
+                    dispatch(setGoogleId({ googleId }));
+                    navigate('/complete-register');
+                } else if (data.accessToken) {
+                    setPersist(true);
+                    const { accessToken } = data;
+                    dispatch(setCredentials({ accessToken }));
+                    handleProfilePicture(data.id);
+                    navigate('/dash');
+                } else {
+                    setErrMsg('Google login failed');
+                }
+            } catch (err) {
+                setErrMsg(handleError(err as ErrorType));
             }
-        } catch (err) {
-            console.log(err);
-            setErrMsg('Google login failed');
         }
     };
 
-    const handleGoogleLoginFailure = (error: any) => {
-        console.error('Google login failed:', error);
+    const handleGoogleLoginFailure =(): void => {
+        console.error('Google login failed:');
         setErrMsg('Google login failed');
     };
 
