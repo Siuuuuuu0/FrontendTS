@@ -1,9 +1,60 @@
 import { apiSlice } from "../../app/api/apiSlice"
 import { logOut, setCredentials } from "./authSlice"
 
+type LoginPayload = {
+    userOrMail: string, 
+    password: string
+}
+type RegisterPayload = {
+    email: string
+}
+type ConfirmCodePayload = {
+    userOrMail: string, 
+    code: string
+}
+type ConfirmRegisterPayload = {
+    token: string
+}
+type CompleteRegisterPayload = {
+    email: string, 
+    password: string, 
+    username?: string, 
+    googleId?: string, 
+    firstName: string, 
+    lastName: string
+}
+type GoogleLoginPayload = {
+    email: string, 
+    name: string, 
+    googleId: string
+}
+type ResetPasswordPayload = {
+    userOrMail: string
+}
+type ConfirmResetPasswordPayload = {
+    password: string, 
+    token: string
+}
+type ConfirmResponse = {
+    accessToken : string, 
+    id: string
+}
+type ConfirmRegistrationResponse = {
+    email: string
+}
+type RefreshResponse = {
+    accessToken: string
+}
+type GL = {
+    toRegister: boolean, 
+    email: string, 
+    googleId: string
+}
+type GoogleLoginResponse = ConfirmResponse | GL
+
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
-        login: builder.mutation({
+        login: builder.mutation<any, LoginPayload>({
             query: credentials => ({
                 url: '/auth',
                 method: 'POST',
@@ -20,9 +71,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
                     const { data } = await queryFulfilled
                     console.log(data)
 
-
-
-                    // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
                     dispatch(logOut())
                     setTimeout(() => {
                         dispatch(apiSlice.util.resetApiState())
@@ -32,7 +80,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
-        refresh: builder.mutation({
+        refresh: builder.mutation<RefreshResponse, any>({
             query: () => ({
                 url: '/auth/refresh',
                 method: 'GET',
@@ -49,7 +97,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
-        register: builder.mutation({
+        register: builder.mutation<any, RegisterPayload>({
             query : initialUserData => ({
                 url : 'auth/register', 
                 method : 'POST', 
@@ -57,41 +105,41 @@ export const authApiSlice = apiSlice.injectEndpoints({
             })
 
         }), 
-        confirmCode : builder.mutation({
+        confirmCode : builder.mutation<ConfirmResponse, ConfirmCodePayload>({
             query : code => ({
                 url : 'auth/verify', 
                 method : 'POST', 
                 body : { ...code }
             })
         }), 
-        confirmRegister : builder.mutation({
+        confirmRegister : builder.mutation<ConfirmRegistrationResponse, ConfirmRegisterPayload>({
             query : ({token}) => ({
                 url : `/auth/register/confirm-registration?token=${token}`, 
                 method : 'POST'
             }),
         }), 
-        completeRegister : builder.mutation({
+        completeRegister : builder.mutation<ConfirmResponse, CompleteRegisterPayload>({
             query: credentials => ({
                 url: '/auth/register/complete-registration',
                 method: 'POST',
                 body: { ...credentials }
             })
         }), 
-        googleLogin : builder.mutation({
+        googleLogin : builder.mutation<GoogleLoginResponse, GoogleLoginPayload>({
             query : credentials => ({
                 url : '/auth/google', 
                 method : 'POST', 
                 body : { ...credentials} 
             })
         }), 
-        resetPassword : builder.mutation({
+        resetPassword : builder.mutation<any, ResetPasswordPayload>({
             query : credentials =>({
                 url : '/reset', 
                 method : 'POST', 
                 body : {...credentials}
             })
         }), 
-        confirmResetPassword : builder.mutation({
+        confirmResetPassword : builder.mutation<any, ConfirmResetPasswordPayload>({
             query : ({password, token}) => ({
                 url : `/reset/confirm?token=${token}`, 
                 method : 'POST', 

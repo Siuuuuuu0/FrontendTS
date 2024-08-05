@@ -1,32 +1,49 @@
-import { createSlice } from '@reduxjs/toolkit'
-//TODO : selectors for id and email
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+type InitialState = {
+    token: string | null;
+    userOrMail: string | null;
+    googleId: string | null;
+};
+
+const initialState: InitialState = {
+    token: null,
+    userOrMail: null,
+    googleId: null,
+};
 
 const authSlice = createSlice({
     name: 'auth',
-    initialState: { token: null, userOrMail : null, googleId : null },
+    initialState,
     reducers: {
-        setCredentials: (state, action) => {
-            const { accessToken } = action.payload
-            state.token = accessToken
+        setCredentials: (state: InitialState, action: PayloadAction<{ accessToken: string }>) => {
+            const { accessToken } = action.payload;
+            state.token = accessToken;
         },
-        logOut: (state, action) => {
-            state.token = null
+        logOut: (state: InitialState) => {
+            state.token = null;
+            state.userOrMail = null;
+            state.googleId = null;
         },
-        setEmailOrUser : (state, action) => {
-            const { userOrMail } = action.payload
-            state.userOrMail = userOrMail
-        }, 
-        setGoogleId : (state, action) => {
-            const {googleId} = action.payload
-            state.googleId = googleId
+        setEmailOrUser: (state: InitialState, action: PayloadAction<{ userOrMail: string }>) => {
+            const { userOrMail } = action.payload;
+            state.userOrMail = userOrMail;
+        },
+        setGoogleId: (state: InitialState, action: PayloadAction<{ googleId: string }>) => {
+            const { googleId } = action.payload;
+            state.googleId = googleId;
         }
     }
-})
+});
 
-export const { setCredentials, logOut, setEmailOrUser, setGoogleId } = authSlice.actions
+export const { setCredentials, logOut, setEmailOrUser, setGoogleId } = authSlice.actions;
 
-export default authSlice.reducer
+export default authSlice.reducer;
 
-export const selectCurrentToken = (state: any) => state.auth.token
-export const selectCurrentGoogleId = (state: any) => state.auth.googleId
-export const selectCurrentUserOrMail = (state: any) => state.auth.userOrMail
+type RootState = {
+    auth: InitialState;
+};
+
+export const selectCurrentToken = (state: RootState) => state.auth.token;
+export const selectCurrentGoogleId = (state: RootState) => state.auth.googleId;
+export const selectCurrentUserOrMail = (state: RootState) => state.auth.userOrMail;

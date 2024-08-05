@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { USER_REGEX, PWD_REGEX, EMAIL_REGEX } from "../../config/regex";
 import { useProfilePicture } from "../../context/profilePictureContext";
+import { ErrorType, handleError } from "../../services/helpers";
 
 type Account = {
     id: string;
@@ -17,7 +18,7 @@ type SettingsProps = {
 };
 
 const Settings: React.FC<SettingsProps> = ({ account }) => {
-    const [error, setError] = useState<string>('');
+    const [errMsg, setErrMsg] = useState<string>('');
     const [isError, setIsError] = useState<boolean>(false);
     const [updateAccount, { isLoading }] = useUpdateAccountMutation();
     const [deleteAccount] = useDeleteAccountMutation();
@@ -69,10 +70,10 @@ const Settings: React.FC<SettingsProps> = ({ account }) => {
                 ? await changeProfilePicture(formData).unwrap()
                 : await uploadProfilePicture(formData).unwrap();
             handleChange({ id, image });
-        } catch (err: any) {
+        } catch (err) {
             console.log(err);
             setIsError(true);
-            setError(err?.data?.message || 'An error occurred');
+            setErrMsg(handleError(err as ErrorType));
         }
     };
 
@@ -83,10 +84,10 @@ const Settings: React.FC<SettingsProps> = ({ account }) => {
     const onUpdateUsernameClicked = async (): Promise<void> => {
         try {
             await updateAccount({ id: account.id, toUpdate: { username } }).unwrap();
-        } catch (err: any) {
+        } catch (err) {
             console.log(err);
             setIsError(true);
-            setError(err?.data?.message || 'An error occurred');
+            setErrMsg(handleError(err as ErrorType));
         }
     };
 
@@ -94,10 +95,10 @@ const Settings: React.FC<SettingsProps> = ({ account }) => {
         try {
             await updateAccount({ id: account.id, toUpdate: { password } }).unwrap();
             setIsSent(true);
-        } catch (err: any) {
+        } catch (err) {
             console.log(err);
             setIsError(true);
-            setError(err?.data?.message || 'An error occurred');
+            setErrMsg(handleError(err as ErrorType));
         }
     };
 
@@ -105,10 +106,10 @@ const Settings: React.FC<SettingsProps> = ({ account }) => {
         try {
             await updateAccount({ id: account.id, toUpdate: { email } }).unwrap();
             setIsSent(true);
-        } catch (err: any) {
+        } catch (err) {
             console.log(err)
             setIsError(true)
-            setError(err?.data?.message || 'An error occurred');
+            setErrMsg(handleError(err as ErrorType));
         }
     };
 
@@ -123,10 +124,10 @@ const Settings: React.FC<SettingsProps> = ({ account }) => {
             setPassword('');
             setUsername('');
             navigate('/');
-        } catch (err: any) {
+        } catch (err) {
             console.log(err);
             setIsError(true);
-            setError(err?.data?.message || 'An error occurred');
+            setErrMsg(handleError(err as ErrorType));
         }
     };
 
@@ -136,10 +137,10 @@ const Settings: React.FC<SettingsProps> = ({ account }) => {
                 const data = await deleteProfilePicture({ id: profilePictureLS.id }).unwrap();
                 console.log(data);
                 handleChange(null);
-            } catch (err: any) {
+            } catch (err) {
                 console.log(err);
                 setIsError(true);
-                setError(err?.data?.message || 'An error occurred');
+                setErrMsg(handleError(err as ErrorType));
             }
         }
     };
@@ -155,7 +156,7 @@ const Settings: React.FC<SettingsProps> = ({ account }) => {
 
     return (
         <>
-            <p className={errClass}>{error}</p>
+            <p className={errClass}>{errMsg}</p>
             <form className="form" onSubmit={(e) => e.preventDefault()}>
                 <div className="form__title-row">
                     <h2>Settings</h2>

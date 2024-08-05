@@ -1,5 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+type UsernamesResponse = {
+    usernames: string[]
+}
+
+type UsernamesPayload = {
+    first_name: string, 
+    last_name: string
+}
+
 const baseQueryForUsernames = fetchBaseQuery({
     baseUrl: 'http://localhost:5000', 
     credentials: 'include',
@@ -9,7 +18,7 @@ export const usernamesApiSlice = createApi({
     baseQuery: baseQueryForUsernames,
     reducerPath : 'usernameApi',
     endpoints: builder => ({
-        getUsernames: builder.mutation({
+        getUsernames: builder.mutation<UsernamesResponse, UsernamesPayload>({
             query: names => ({
                 url: '/generate_usernames',
                 method: 'POST', 

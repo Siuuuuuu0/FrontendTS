@@ -4,6 +4,7 @@ import { PulseLoader } from 'react-spinners';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { setCredentials } from '../auth/authSlice';
+import { ErrorType, handleError } from '../../services/helpers';
 
 const Update: React.FC = () => {
     const dispatch = useDispatch();
@@ -30,8 +31,8 @@ const Update: React.FC = () => {
 
                     dispatch(setCredentials({ accessToken }));
                     navigate('/dash/settings');
-                } catch (err: any) {
-                    setErrMsg(err?.data?.message || 'An error occurred');
+                } catch (err) {
+                    setErrMsg(handleError(err as ErrorType));
                     if (errRef.current) {
                         errRef.current.focus();
                     }

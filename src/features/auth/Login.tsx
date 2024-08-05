@@ -108,7 +108,7 @@ const Login = () => {
 
                 // @ts-expect-error TS(2339): Property 'name' does not exist on type 'JwtPayload... Remove this comment to see the full error message
                 name: userObject.name,
-                googleId: userObject.sub,
+                googleId: userObject.sub || '',
             }).unwrap()
             setUserOrMail('')
             setPassword('')
