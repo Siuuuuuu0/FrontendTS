@@ -1,66 +1,45 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
-import { useNavigate } from 'react-router-dom'
-import { useGetUsersQuery } from './usersApiSlice'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+import { useGetUsersQuery } from './usersApiSlice';
+import { memo } from 'react';
 
-
-import { memo } from 'react'
-
-const User = ({
-    userId
-}: any) => {
-  //   const user = useSelector(state => selectUserById(state, userId)); 
-
-    const { user } = useGetUsersQuery("usersList", {
-        selectFromResult: ({ data }) => ({
-            user: data?.entities[userId]
-        }),
-    })
-
-    const navigate = useNavigate()
-
-    if (user) {
-        const handleEdit = () => navigate(`/dash/users/${userId}`)
-
-        const userRolesString = Object.keys(user.roles).join(', ')
-
-        const cellStatus = user.active ? '' : 'table__cell--inactive'
-
-        return (
-
-
-            <tr className="table__row user">
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                <td className={`table__cell ${cellStatus}`}>{user.username}</td>
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                <td className={`table__cell ${cellStatus}`}>{userRolesString}</td>
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                <td className={`table__cell ${cellStatus}`}>
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    <button
-                        className="icon-button table__button"
-                        onClick={handleEdit}
-                    >
-                        // @ts-expect-error TS(17004): Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
-                        <FontAwesomeIcon icon={faPenToSquare} />
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                    </button>
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-                </td>
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            // @ts-expect-error TS(7026): JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
-            </tr>
-        )
-
-    } else return null
+type UserProps = {
+    userId: string;
 }
 
-const memoizedUser = memo(User)
+const User: React.FC<UserProps> = ({ userId }) => {
+    const { user } = useGetUsersQuery('usersList', {
+        selectFromResult: ({ data }) => ({
+            user: data?.entities[userId],
+        }),
+    });
 
-export default memoizedUser
+    const navigate = useNavigate();
+
+    if (!user) return null;
+
+    const handleEdit = (): void => navigate(`/dash/users/${userId}`);
+
+    const userRolesString: string = Object.keys(user.roles).join(', ');
+
+    // const cellStatus = user.active ? '' : 'table__cell--inactive';
+    const cellStatus: string = '';
+
+    return (
+        <tr className="table__row user">
+            <td className={`table__cell ${cellStatus}`}>{user.username}</td>
+            <td className={`table__cell ${cellStatus}`}>{userRolesString}</td>
+            <td className={`table__cell ${cellStatus}`}>
+                <button
+                    className="icon-button table__button"
+                    onClick={handleEdit}
+                >
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                </button>
+            </td>
+        </tr>
+    );
+}
+
+export default memo(User);

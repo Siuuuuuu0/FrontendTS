@@ -1,27 +1,8 @@
 import { apiSlice } from "../../app/api/apiSlice";
 import { logOut } from "../auth/authSlice";
 import { setAccount } from "./accountSlice";
+import { AtLeastOne, User } from "../../services/helpers";
 
-type AtLeastOne<T> = {
-    [K in keyof T]: Pick<T, K> & Partial<Omit<T, K>>;
-}[keyof T];
-
-
-// Type Parameter T:
-
-// AtLeastOne is a generic type that takes a type parameter T.
-// Mapped Type:
-
-// [K in keyof T]: is a mapped type. It iterates over each key K in the type T.
-// Pick and Partial:
-
-// Pick<T, K>: This utility type creates a new type by picking the key K from T and making it required.
-// Partial<Omit<T, K>>: This creates a new type by omitting the key K from T and making all other keys optional.
-// Pick<T, K> & Partial<Omit<T, K>>: This creates a new type where the key K is required, and all other keys are optional. The & operator combines these two types.
-// Union of All Possible Mapped Types:
-
-// { [K in keyof T]: ... }[keyof T]: This constructs a union type of all the possible mapped types created in the previous step.
-// By indexing the mapped type with [keyof T], we get a union of all the types where each key K from T is made required one by one.
 
 type UpdateAccountPayload = {
     id: string, 
@@ -36,27 +17,13 @@ type GetAccountPayload = { id: string };
 type ConfirmUpdatePasswordPayload = { token: string };
 type ConfirmUpdateEmailPayload = { token: string };
 type UploadProfilePicturePayload = FormData;
-type DeleteProfilePicturePayload = { id: string };
+type DeleteProfilePicturePayload = AtLeastOne<{ id: string, userId: string }>;
 type ChangeProfilePicturePayload = FormData;
 type GetProfilePicturePayload = { id: string };
 
 export type ProfilePictureResponse = {
     id: string;
     image: string;
-};
-
-type UserResponse = {
-    username : string, 
-    email : string, 
-    firstName : string, 
-    lastName : string, 
-    roles : {
-        [key:string]: number
-    }, 
-    _id : string, 
-    googleId?:string,
-    logIns?:string[], 
-    [key:string]:any
 };
 
 type UpdateConfirmResponse = {
@@ -70,7 +37,7 @@ type UpdateConfirmResponse = {
 
 export const accountApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
-        updateAccount: builder.mutation<any, UpdateAccountPayload>({
+        updateAccount: builder.mutation<void, UpdateAccountPayload>({
             query: initialUserData => ({
                 url: '/update',
                 method: 'PATCH',
@@ -79,7 +46,7 @@ export const accountApiSlice = apiSlice.injectEndpoints({
                 }
             })
         }),
-        deleteAccount: builder.mutation<any, DeleteAccountPayload>({
+        deleteAccount: builder.mutation<void, DeleteAccountPayload>({
             query: ({ id }) => ({
                 url: `/update`,
                 method: 'DELETE',
@@ -90,9 +57,6 @@ export const accountApiSlice = apiSlice.injectEndpoints({
                     await queryFulfilled;
                     dispatch(setAccount(null));
 
-
-
-                    // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
                     dispatch(logOut())
                     setTimeout(() => {
                         dispatch(apiSlice.util.resetApiState())
@@ -102,7 +66,7 @@ export const accountApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
-        getAccount: builder.query<UserResponse, GetAccountPayload>({
+        getAccount: builder.query<User, GetAccountPayload>({
             query: ({ id }) => ({
                 url: `/users/:${id}`,
                 method: 'GET'
@@ -135,7 +99,7 @@ export const accountApiSlice = apiSlice.injectEndpoints({
                 body : formData
             })
         }), 
-        deleteProfilePicture : builder.mutation<any, DeleteProfilePicturePayload>({
+        deleteProfilePicture : builder.mutation<void, DeleteProfilePicturePayload>({
             query : id => ({
                 url : '/account/delete-profile-picture', 
                 method : 'POST', 

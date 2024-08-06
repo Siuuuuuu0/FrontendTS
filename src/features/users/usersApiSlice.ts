@@ -1,47 +1,72 @@
 import { apiSlice } from "../../app/api/apiSlice";
 import {
     createSelector, 
-    createEntityAdapter
+    createEntityAdapter,
+    EntityState
 } from '@reduxjs/toolkit' 
-const usersAdapter = createEntityAdapter({}); 
+import { AtLeastOne, User } from "../../services/helpers";
+import { RootState } from "../../app/store";
+const usersAdapter = createEntityAdapter<NewUser>({});
 const initialState = usersAdapter.getInitialState();
+
+type AddNewUserPayload = {
+    email: string, 
+    password: string, 
+    username?: string
+};
+
+type toUpdate = {
+    username?: string,
+    email?: string, 
+    password?: string, 
+    roles?: {
+        [key: string] : number
+    }
+};
+
+type UpdateUserPayload = {
+    toUpdate: AtLeastOne<toUpdate>, 
+    email: string, 
+    username: string, 
+    id: string
+};
+
+type DeleteUserPayload = {
+    id: string
+};
+
+type NewUser = User & {
+    id: string
+};
 
 export const usersApiSlice = apiSlice.injectEndpoints({
     endpoints : builder => ({
-        getUsers: builder.query({
+        getUsers: builder.query<EntityState<NewUser, string>, string | void>({
             query : () => ({
                 url : '/users', 
                 validateStatus : (response: any, result: any) => {
                     return response.status === 200 && !result.isError
                 }, 
             }), 
-            transformResponse : responseData => {
-
-
-
-                // @ts-expect-error TS(2571): Object is of type 'unknown'.
-                const loadedUsers = responseData.map((user: any) => {
-                    user.id = user._id 
-                    return user
+            transformResponse : (responseData: User[]) => {
+                const loadedUsers: NewUser[] = responseData.map((user: User) => {
+                    return {...user, id: user._id}
                 })
                 return usersAdapter.setAll(initialState, loadedUsers);
             },
-
-
-
-            // @ts-expect-error TS(2322): Type '(result: EntityState<{ id: EntityId; }, Enti... Remove this comment to see the full error message
-            providesTags : (result, error, arg) => {
+            providesTags : (result) => {
+                if (!result) return [{ type: "User", id: 'LIST' }]
                 if(result?.ids){
                     return [
                         {type : 'User', id : 'LIST'}, 
-                        ...result.ids.map(id => ({type: 'User', id}))
+                        ...result.ids.map(id => ({type: 'User' as const, id}))
                     ]
                 }
                 else return [{type : 'User', id : 'LIST'}]
             }, 
             
         }) , 
-        addNewUser : builder.mutation({
+        addNewUser : builder.mutation<void, AddNewUserPayload>({
             query : initialUserData => ({
                 url : '/users', 
                 method : 'POST', 
@@ -53,7 +78,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 {type : 'User', id : 'LIST'}
             ]
         }), 
-        updateUser : builder.mutation({
+        updateUser : builder.mutation<void, UpdateUserPayload>({
             query : initialUserData => ({
                 url : '/users', 
                 method : 'PATCH', 
@@ -65,7 +90,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 {type : 'User', id : arg.id}
             ]
         }), 
-        deleteUser : builder.mutation({
+        deleteUser : builder.mutation<void, DeleteUserPayload>({
             query : ({id}) => ({
                 url : '/users', 
                 method : 'DELETE', 
@@ -103,10 +128,6 @@ export const {
     useDeleteUserMutation
 } = usersApiSlice
 
-
-
-
-// @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select()
 
 const selectUsersData = createSelector(
@@ -118,5 +139,4 @@ export const {
     selectAll : selectAllUsers, 
     selectById : selectUserById, 
     selectIds : selectUserIds
-// @ts-expect-error TS(2345): Argument of type 'unknown' is not assignable to pa... Remove this comment to see the full error message
-} = usersAdapter.getSelectors(state => selectUsersData(state) ?? initialState)
+} = usersAdapter.getSelectors((state: RootState) => selectUsersData(state) ?? initialState)

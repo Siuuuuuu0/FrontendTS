@@ -54,7 +54,7 @@ export type GoogleLoginResponse = ConfirmResponse | GL
 
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
-        login: builder.mutation<any, LoginPayload>({
+        login: builder.mutation<void, LoginPayload>({
             query: credentials => ({
                 url: '/auth',
                 method: 'POST',
@@ -80,7 +80,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
-        refresh: builder.mutation<RefreshResponse, any>({
+        refresh: builder.mutation<RefreshResponse, void>({
             query: () => ({
                 url: '/auth/refresh',
                 method: 'GET',
@@ -97,7 +97,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
-        register: builder.mutation<any, RegisterPayload>({
+        register: builder.mutation<void, RegisterPayload>({
             query : initialUserData => ({
                 url : 'auth/register', 
                 method : 'POST', 
@@ -132,14 +132,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body : { ...credentials} 
             })
         }), 
-        resetPassword : builder.mutation<any, ResetPasswordPayload>({
+        resetPassword : builder.mutation<void, ResetPasswordPayload>({
             query : credentials =>({
                 url : '/reset', 
                 method : 'POST', 
                 body : {...credentials}
             })
         }), 
-        confirmResetPassword : builder.mutation<any, ConfirmResetPasswordPayload>({
+        confirmResetPassword : builder.mutation<void, ConfirmResetPasswordPayload>({
             query : ({password, token}) => ({
                 url : `/reset/confirm?token=${token}`, 
                 method : 'POST', 
