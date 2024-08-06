@@ -46,7 +46,7 @@ const Login = () => {
             const { id, image } = await getProfilePicture({ id: userId }).unwrap();
             handleChange({ id, image });
         } catch (err) {
-            console.error(err);
+            setErrMsg(handleError(err as ErrorType));
         }
     };
 
