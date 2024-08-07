@@ -73,7 +73,7 @@ const Login = () => {
 
     const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>): void => setUserOrMail(e.target.value);
     const handlePwdInput = (e: React.ChangeEvent<HTMLInputElement>): void => setPassword(e.target.value);
-    const handleToggle = (): void => setPersist((prev: boolean) => !prev);
+    const handleToggle = (): void => (setPersist as React.Dispatch<React.SetStateAction<boolean>>)((prev: boolean) => !prev);
 
     const isGL = (response: GoogleLoginResponse): response is GL => {
         return (response as GL).toRegister !== undefined;
@@ -98,7 +98,7 @@ const Login = () => {
                     dispatch(setGoogleId({ googleId }));
                     navigate('/complete-register');
                 } else if (data.accessToken) {
-                    setPersist(true);
+                    (setPersist as React.Dispatch<React.SetStateAction<boolean>>)(true);
                     const { accessToken } = data;
                     dispatch(setCredentials({ accessToken }));
                     handleProfilePicture(data.id);
@@ -156,7 +156,7 @@ const Login = () => {
                             className="form__checkbox"
                             id="persist"
                             onChange={handleToggle}
-                            checked={persist}
+                            checked={persist as boolean}
                         />
                         Trust This Device
                     </label>

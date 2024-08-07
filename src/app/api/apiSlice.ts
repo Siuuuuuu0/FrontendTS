@@ -1,18 +1,11 @@
-import { createApi, fetchBaseQuery, RootState } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { setCredentials } from '../../features/auth/authSlice';
-
-interface RefreshResult {
-    accessToken : string
-};
+import { RootState } from '../store';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:3500',
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
-
-
-
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         const token = (getState() as RootState).auth.token
 
         if (token) {

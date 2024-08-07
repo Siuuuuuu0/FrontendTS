@@ -147,7 +147,7 @@ const CompleteRegister: React.FC = () => {
         }
     };
 
-    const handleToggle = (): void => setPersist((prev: boolean) => !prev);
+    const handleToggle = (): void => (setPersist as React.Dispatch<React.SetStateAction<boolean>>)((prev: boolean) => !prev);
 
     const regenerateUsernames = async (): Promise<void> => {
         if (validFirstName && validLastName) {
@@ -272,7 +272,7 @@ const CompleteRegister: React.FC = () => {
                 className="form__checkbox"
                 id="persist"
                 onChange={handleToggle}
-                checked={persist}
+                checked={persist as boolean}
             />
             Trust this device
             </label>

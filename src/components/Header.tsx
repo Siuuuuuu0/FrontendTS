@@ -9,9 +9,9 @@ import { useProfilePicture } from '../context/profilePictureContext'
 const Header: React.FC = () => {
     const navigate = useNavigate()
 
-    const [isLogoutSuccess, setIsLogoutSuccess] = useState<boolean>(false)
+    // const [isLogoutSuccess, setIsLogoutSuccess] = useState<boolean>(false)
 
-    const {profilePictureLS, handleChange} = useProfilePicture()
+    const {profilePictureLS, handleChange } = useProfilePicture()
     const [imageSrc, setImageSrc] = useState<string>('');
 
     useEffect(() => {
@@ -28,12 +28,12 @@ const Header: React.FC = () => {
         error
     }] = useSendLogoutMutation()
 
-    useEffect(() => {
-        if (isLogoutSuccess)  {
-            handleChange(null)
-            navigate('/')
-        }
-    }, [isLogoutSuccess, navigate])
+    // useEffect(() => {
+    //     if (isLogoutSuccess)  {
+    //         handleChange(null)
+    //         navigate('/')
+    //     }
+    // }, [isLogoutSuccess, navigate])
 
     const logoutButton: JSX.Element = (
 
@@ -43,8 +43,9 @@ const Header: React.FC = () => {
             title="Logout"
             onClick={async() => {
                 try {
-                    await sendLogout({}).unwrap()
-                    setIsLogoutSuccess(true)
+                    await sendLogout().unwrap()
+                    navigate('/')
+                    handleChange(null)
                 }catch(err){
 
                 }
