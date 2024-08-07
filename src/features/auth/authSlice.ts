@@ -4,12 +4,14 @@ type InitialState = {
     token: string | null;
     userOrMail: string | null;
     googleId: string | null;
+    notToRefresh: boolean | null;
 };
 
 const initialState: InitialState = {
     token: null,
     userOrMail: null,
     googleId: null,
+    notToRefresh: null
 };
 
 const authSlice = createSlice({
@@ -21,6 +23,7 @@ const authSlice = createSlice({
             state.token = accessToken;
         },
         logOut: (state: InitialState) => {
+            state.notToRefresh = true;
             state.token = null;
             state.userOrMail = null;
             state.googleId = null;
@@ -47,3 +50,4 @@ type RootState = {
 export const selectCurrentToken = (state: RootState) => state.auth.token;
 export const selectCurrentGoogleId = (state: RootState) => state.auth.googleId;
 export const selectCurrentUserOrMail = (state: RootState) => state.auth.userOrMail;
+export const selectCurrentNotToRefresh = (state: RootState) => state.auth.notToRefresh;

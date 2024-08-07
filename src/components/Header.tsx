@@ -5,13 +5,14 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useSendLogoutMutation } from '../features/auth/authApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import { useProfilePicture } from '../context/profilePictureContext'
+import usePersist from '../hooks/usePersist'
 
 const Header: React.FC = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     // const [isLogoutSuccess, setIsLogoutSuccess] = useState<boolean>(false)
 
-    const {profilePictureLS, handleChange } = useProfilePicture()
+    const {profilePictureLS, handleChange } = useProfilePicture();
     const [imageSrc, setImageSrc] = useState<string>('');
 
     useEffect(() => {
@@ -26,7 +27,7 @@ const Header: React.FC = () => {
         isLoading,
         isError,
         error
-    }] = useSendLogoutMutation()
+    }] = useSendLogoutMutation();
 
     // useEffect(() => {
     //     if (isLogoutSuccess)  {
@@ -43,9 +44,9 @@ const Header: React.FC = () => {
             title="Logout"
             onClick={async() => {
                 try {
-                    await sendLogout().unwrap()
-                    navigate('/')
-                    handleChange(null)
+                    await sendLogout().unwrap();
+                    navigate('/');
+                    handleChange(null);
                 }catch(err){
 
                 }

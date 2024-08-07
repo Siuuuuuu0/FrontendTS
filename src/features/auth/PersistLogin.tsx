@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useRefreshMutation } from "./authApiSlice";
 import usePersist from "../../hooks/usePersist";
 import { useSelector } from 'react-redux';
-import { selectCurrentToken } from "./authSlice";
+import { selectCurrentNotToRefresh, selectCurrentToken } from "./authSlice";
 import PulseLoader from 'react-spinners/PulseLoader';
 import { ErrorType, handleError } from "../../services/helpers";
 
 const PersistLogin: React.FC = (): JSX.Element => {
     const [persist, setPersist] = usePersist();
     const token: string | null = useSelector(selectCurrentToken);
+    const notToResfresh: boolean | null = useSelector(selectCurrentNotToRefresh);
     const effectRan: React.MutableRefObject<boolean> = useRef<boolean>(false);
     const [trueSuccess, setTrueSuccess] = useState<boolean>(false);
     const [errMsg, setErrMsg] = useState<string>('')
@@ -27,7 +28,7 @@ const PersistLogin: React.FC = (): JSX.Element => {
                 }
             };
 
-            if (!token && persist) verifyRefreshToken();
+            if (!notToResfresh && !token && persist) verifyRefreshToken();
         }
 
         return () => {
