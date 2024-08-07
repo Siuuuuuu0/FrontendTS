@@ -9,6 +9,10 @@ type UsernamesPayload = {
     last_name: string
 }
 
+type AddUsernamePayload = {
+    username: string
+}
+
 const baseQueryForUsernames = fetchBaseQuery({
     baseUrl: 'http://localhost:5000', 
     credentials: 'include',
@@ -25,7 +29,7 @@ export const usernamesApiSlice = createApi({
                 body : {...names}
             })
         }), 
-        addUsername : builder.mutation({
+        addUsername : builder.mutation<void, AddUsernamePayload>({
             query : username => ({
                 url : '/add_username', 
                 method : 'POST', 

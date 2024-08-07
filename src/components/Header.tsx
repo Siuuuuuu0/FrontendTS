@@ -35,7 +35,7 @@ const Header: React.FC = () => {
         }
     }, [isLogoutSuccess, navigate])
 
-    const logoutButton = (
+    const logoutButton: JSX.Element = (
 
 
         <button
@@ -62,16 +62,13 @@ const Header: React.FC = () => {
         buttonContent = <PulseLoader color={"#FFF"} />
     } else {
         buttonContent = (
-
             <>
                 {logoutButton}
             </>
         )
     }
 
-    const content = (
-
-
+    const content: JSX.Element = (
         <>
             <p className={errClass}>{
                 (function(): ReactNode {
