@@ -21,7 +21,7 @@ type DecodedType = {
 }
 
 const useAuth = (): UseAuthType => {
-    const token: string = useSelector(selectCurrentToken)
+    const token: string | null = useSelector(selectCurrentToken)
     let isAdmin: boolean = false
     let status: string = "User"
 

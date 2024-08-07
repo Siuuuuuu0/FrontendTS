@@ -1,13 +1,8 @@
-
-
 import { useState, useEffect } from "react"
 
 const usePersist = () => {
-
-
-
-    // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
-    const [persist, setPersist] = useState(JSON.parse(localStorage.getItem("persist")) || false);
+    const persistLS: string | null = localStorage.getItem("persist")
+    const [persist, setPersist]: [boolean, React.Dispatch<boolean>] = useState(persistLS ? JSON.parse(persistLS) : false);
 
     useEffect(() => {
         localStorage.setItem("persist", JSON.stringify(persist))
