@@ -1,5 +1,5 @@
 import React from 'react';
-import { Actor, Director, useGetMoviesQuery } from './moviesApiSlice';
+import { useGetMoviesQuery } from './moviesApiSlice';
 
 type MovieProps = {
   movieId : number
