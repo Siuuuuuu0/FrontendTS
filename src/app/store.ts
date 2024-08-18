@@ -4,6 +4,7 @@ import { setupListeners } from "@reduxjs/toolkit/query"
 import authReducer from '../features/auth/authSlice'
 import accountReducer from '../features/account/accountSlice'
 import { usernamesApiSlice } from "./api/usernameApiSlice"
+import { moviesApiSlice } from "../features/movies/moviesApiSlice"
 
 
 const rootReducer = combineReducers({
@@ -11,12 +12,13 @@ const rootReducer = combineReducers({
     auth: authReducer,
     account: accountReducer,
     [usernamesApiSlice.reducerPath]: usernamesApiSlice.reducer,
+    [moviesApiSlice.reducerPath]: moviesApiSlice.reducer
 });
 
 export const store = configureStore({
     reducer: rootReducer,
     middleware: getDefaultMiddleware => {
-        const allMiddleware = [apiSlice.middleware, usernamesApiSlice.middleware]
+        const allMiddleware = [apiSlice.middleware, usernamesApiSlice.middleware, moviesApiSlice.middleware]
         return getDefaultMiddleware().concat(
         ...allMiddleware
         );

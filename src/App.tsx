@@ -18,6 +18,7 @@ import Account from './features/account/Account'
 import Update from './features/account/Update'
 import Reset from './features/auth/Reset'
 import ConfirmReset from './features/auth/ConfirmReset'
+import MoviesList from './features/movies/MoviesList'
 
 function App() {
   useTitle('Auth Page')
@@ -50,7 +51,10 @@ function App() {
               <Route path="settings" element={<Account/>}/>
               <Route path="update-email" element={<Update/>}/>
               <Route path="update-password" element={<Update/>}/>
-            </Route>{/* End Dash */}
+              <Route path="movies">
+                <Route index element={<MoviesList />}/>
+              </Route>
+            </Route>
           </Route>
         </Route>{/* End Protected Routes */}
 
