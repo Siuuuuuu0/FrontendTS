@@ -34,10 +34,12 @@ export const moviesApiSlice = moviesApi.injectEndpoints({
     getMovies: builder.query<EntityState<Movie, number>, { title?: string; releaseYear?: number; directorId?: number; actorIds?: number[] } | string>({
       query: (filters) => {
         const params = new URLSearchParams();
-        if (filters.title) params.append('title', filters.title);
-        if (filters.releaseYear) params.append('releaseYear', filters.releaseYear.toString());
-        if (filters.directorId) params.append('directorId', filters.directorId.toString());
-        if (filters.actorIds) filters.actorIds.forEach(id => params.append('actorIds', id.toString()));
+        if (typeof filters === 'object') {
+            if (filters.title) params.append('title', filters.title);
+            if (filters.releaseYear) params.append('releaseYear', filters.releaseYear.toString());
+            if (filters.directorId) params.append('directorId', filters.directorId.toString());
+            if (filters.actorIds) filters.actorIds.forEach(id => params.append('actorIds', id.toString()));
+        } 
         return {
             url : `/movies?${params.toString()}`, 
             validateStatus : (response: any, result: any) => {

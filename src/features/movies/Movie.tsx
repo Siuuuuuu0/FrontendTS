@@ -14,14 +14,14 @@ const Movie: React.FC<MovieProps> = ({ movieId }) => {
     });
     return (
         <div className="movie">
-        <h2 className="movie-title">{movie.title}</h2>
+        <h2 className="movie-title">{movie?.title}</h2>
         <p className="movie-director">
-            Directed by: {movie.director.first_name} {movie.director.last_name}
+            Directed by: {movie?.director.first_name} {movie?.director.last_name}
         </p>
-        <p className="movie-release-year">Released in: {movie.releaseYear}</p>
+        <p className="movie-release-year">Released in: {movie?.releaseYear}</p>
         <h3>Actors:</h3>
         <ul className="movie-actors">
-            {movie.actors.map((actor, index) => (
+            {movie?.actors.map((actor, index) => (
             <li key={index}>
                 {actor.first_name} {actor.last_name}
             </li>
