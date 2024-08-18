@@ -1,3 +1,4 @@
+import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
 import { moviesApi } from "../../app/api/moviesApi";
 
 export type Director = {
@@ -11,23 +12,50 @@ export type Actor = {
 };
 
 type Movie = { 
+    id: number;
     title: string; 
     releaseYear: number; 
     director: Director; 
     actors: Actor[] 
 };
 
+const moviesAdapter = createEntityAdapter<Movie>({
+    sortComparer: (a, b) => {
+      if (a.releaseYear < b.releaseYear) return -1;
+      if (a.releaseYear > b.releaseYear) return 1;
+      return 0;
+    }
+});
+
+const initialState = moviesAdapter.getInitialState()
+
 export const moviesApiSlice = moviesApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMovies: builder.query<Movie[], { title?: string; releaseYear?: number; directorId?: number; actorIds?: number[] }>({
+    getMovies: builder.query<EntityState<Movie, number>, { title?: string; releaseYear?: number; directorId?: number; actorIds?: number[] } | string>({
       query: (filters) => {
         const params = new URLSearchParams();
         if (filters.title) params.append('title', filters.title);
         if (filters.releaseYear) params.append('releaseYear', filters.releaseYear.toString());
         if (filters.directorId) params.append('directorId', filters.directorId.toString());
         if (filters.actorIds) filters.actorIds.forEach(id => params.append('actorIds', id.toString()));
-        return `/movies?${params.toString()}`;
+        return {
+            url : `/movies?${params.toString()}`, 
+            validateStatus : (response: any, result: any) => {
+                return response.status === 200 && !result.isError
+            },
+        }
       },
+      transformResponse: (responseData: Movie[]) => {
+        return moviesAdapter.setAll(initialState, responseData);
+      },    
+      providesTags: (result, error, arg) => {
+        if (result?.ids) {
+          return [
+            { type: 'Movie', id: 'LIST' },
+            ...result.ids.map(id => ({ type: 'Movie' as const, id })),
+          ];
+        } else return [{ type: 'Movie', id: 'LIST' }];
+      }    
     }),
     getMovieById: builder.query<Movie, number>({
       query: (id) => `/movies/${id}`,
