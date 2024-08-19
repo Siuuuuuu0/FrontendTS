@@ -32,7 +32,7 @@ const initialState = moviesAdapter.getInitialState()
 
 export const moviesApiSlice = moviesApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMovies: builder.query<EntityState<Movie, number>, { title?: string; releaseYear?: number; directorId?: number; actorIds?: number[] } | string>({
+    getMovies: builder.query<EntityState<Movie, number>, { title?: string; releaseYear?: number; directorId?: number; actorIds?: string[] } | string>({
       query: (filters) => {
         const params = new URLSearchParams();
         if (typeof filters === 'object') {
