@@ -7,6 +7,7 @@ export type Director = {
 };
 
 export type Actor = {
+    id: number;
     last_name : string, 
     first_name : string
 };
