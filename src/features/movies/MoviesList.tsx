@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Movie from './Movie'; 
 import { useGetMoviesQuery } from './moviesApiSlice';
 import { useGetActorsQuery } from './actorsApiSlice'; 
 import { handleError } from '../../services/helpers';
+import ControlledInput from './ControlledInput';
+
+type Actor = {
+    first_name: string;
+    last_name: string;
+};
 
 const MoviesList: React.FC = () => {
     const [releaseYear, setReleaseYear] = useState<number | undefined>();
     const [lastName, setLastName] = useState<string>('');
-    const [selectedActorIds, setSelectedActorIds] = useState<string[]>([]);
+    const [selectedActors, setSelectedActors] = useState<{ [key: string]: Actor }>({});
 
     const {
         data: movies, 
@@ -15,8 +21,8 @@ const MoviesList: React.FC = () => {
         isSuccess,
         isError, 
         error
-    } = useGetMoviesQuery({ releaseYear, actorIds: selectedActorIds }, {
-        pollingInterval: 24*60*60000,
+    } = useGetMoviesQuery({ releaseYear, actorIds: Object.keys(selectedActors) }, {
+        pollingInterval: 24 * 60 * 60000,
         refetchOnFocus: true,
         refetchOnMountOrArgChange: true
     });
@@ -27,7 +33,7 @@ const MoviesList: React.FC = () => {
         isError: isActorsError,
         error: actorsError,
     } = useGetActorsQuery({ last_name: lastName }, {
-        skip: !lastName 
+        skip: !lastName.trim()
     });
 
     const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -35,30 +41,28 @@ const MoviesList: React.FC = () => {
         setReleaseYear(year || undefined);
     };
 
-    const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setLastName(e.target.value);
+    const handleLastNameChange = (val: string) => {
+        setLastName(val);
     };
 
     const handleActorSelect = (actorId: string) => {
-        setSelectedActorIds(prevIds => {
-            if (prevIds.includes(actorId)) {
-                return prevIds.filter(id => id !== actorId);
-            } else {
-                return [...prevIds, actorId];
-            }
-        });
+        if (actors && actors.entities[parseInt(actorId, 10)]) {
+            setSelectedActors(prev => ({
+                ...prev,
+                [actorId]: {
+                    first_name: actors.entities[parseInt(actorId, 10)].first_name,
+                    last_name: actors.entities[parseInt(actorId, 10)].last_name
+                }
+            }));
+        }
     };
 
     const handleActorRemove = (actorId: string) => {
-        setSelectedActorIds(prevIds => prevIds.filter(id => id !== actorId));
+        setSelectedActors(prev => {
+            const { [actorId]: removed, ...rest } = prev;
+            return rest;
+        });
     };
-
-    // useEffect(() => {
-    //     if (actors) {
-    //         const actorIdsSet = new Set(actors.ids);
-    //         setSelectedActorIds(prevIds => prevIds.filter(id => actorIdsSet.has(parseInt(id, 10))));
-    //     }
-    // }, [actors]);
 
     let content: JSX.Element;
 
@@ -87,16 +91,10 @@ const MoviesList: React.FC = () => {
                 </div>
                 <div className="filter">
                     <label htmlFor="lastName">Filter by Actor's Last Name: </label>
-                    <input
-                        type="text"
-                        id="lastName"
-                        value={lastName}
-                        onChange={handleLastNameChange}
-                        placeholder="Enter last name"
-                    />
+                    <ControlledInput onUpdate={handleLastNameChange} />
                     {isActorsLoading && <p>Loading actors...</p>}
                     {isActorsError && <p className="errmsg">{handleError(actorsError)}</p>}
-                    {actors && (
+                    {actors && lastName.trim() && (
                         <ul className="actors-list">
                             {actors.ids.map((actorId: any) => (
                                 <li 
@@ -104,22 +102,21 @@ const MoviesList: React.FC = () => {
                                     onClick={() => handleActorSelect(actorId)}
                                     style={{
                                         cursor: 'pointer',
-                                        fontWeight: selectedActorIds.includes(actorId) ? 'bold' : 'normal',
+                                        fontWeight: selectedActors[actorId] ? 'bold' : 'normal',
                                     }}
                                 >
-                                    {`${actors.entities[actorId].first_name} ${actors.entities[actorId].last_name}`}
+                                    {`${actors.entities[actorId]?.first_name || 'Unknown'} ${actors.entities[actorId]?.last_name || 'Actor'}`}
                                 </li>
                             ))}
                         </ul>
                     )}
                 </div>
-                {/* Display Selected Actors */}
                 <div className="selected-actors">
                     <h4>Selected Actors:</h4>
                     <ul>
-                        {selectedActorIds.map(actorId => (
+                        {Object.entries(selectedActors).map(([actorId, actor]) => (
                             <li key={actorId}>
-                                {`${actors?.entities[parseInt(actorId, 10)]?.first_name} ${actors?.entities[parseInt(actorId, 10)]?.last_name}`}
+                                {`${actor.first_name} ${actor.last_name}`}
                                 <button onClick={() => handleActorRemove(actorId)}>Remove</button>
                             </li>
                         ))}
@@ -138,6 +135,3 @@ const MoviesList: React.FC = () => {
 };
 
 export default MoviesList;
-
-
-
