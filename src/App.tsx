@@ -19,6 +19,7 @@ import Update from './features/account/Update'
 import Reset from './features/auth/Reset'
 import ConfirmReset from './features/auth/ConfirmReset'
 import MoviesList from './features/movies/MoviesList'
+import SingleMovie from './features/movies/SingleMovie'
 
 function App() {
   useTitle('Auth Page')
@@ -53,6 +54,7 @@ function App() {
               <Route path="update-password" element={<Update/>}/>
               <Route path="movies">
                 <Route index element={<MoviesList />}/>
+                <Route path=":id" element={<SingleMovie />}/>
               </Route>
             </Route>
           </Route>

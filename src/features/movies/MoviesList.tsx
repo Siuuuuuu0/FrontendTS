@@ -4,6 +4,7 @@ import { useGetMoviesQuery } from './moviesApiSlice';
 import { useGetActorsQuery } from './actorsApiSlice'; 
 import { handleError } from '../../services/helpers';
 import ControlledInput from './ControlledInput';
+import { Link } from 'react-router-dom';
 
 type Actor = {
     first_name: string;
@@ -74,7 +75,7 @@ const MoviesList: React.FC = () => {
         const { ids } = movies;
 
         const listContent = ids?.length
-            ? ids.map((movieId: any) => <Movie key={movieId} movieId={movieId} />)
+            ? ids.map((movieId: any) => <div key={movieId}><Movie movieId={movieId} /><Link to={`/dash/movies/${movieId}`}>View Movie</Link></div>)
             : <p>No movies found for the selected filters.</p>;
 
         content = (

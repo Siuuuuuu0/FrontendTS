@@ -19,6 +19,7 @@ const Welcome: React.FC = () => {
             <h1>Welcome {username}!</h1>
             {isAdmin && <p><Link to="/dash/users">View Users</Link></p>}
             <p><Link to="/dash/settings">View Settings</Link></p>
+            <p><Link to="/dash/movies">View Movies</Link></p>
             {/* 
             <p><Link to="/dash/notes">View techNotes</Link></p>
             <p><Link to="/dash/notes/new">Add New techNote</Link></p>
