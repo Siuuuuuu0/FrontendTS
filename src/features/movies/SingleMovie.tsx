@@ -1,6 +1,6 @@
 import React from 'react';
 import Movie from './Movie';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const SingleMovie: React.FC<{}> = () => {
 
@@ -8,7 +8,10 @@ const SingleMovie: React.FC<{}> = () => {
     const movieId = parseInt(id || '', 10);
 
     return (
-        <Movie movieId={movieId}/>
+        <>
+            <Movie movieId={movieId}/>
+            <Link to={`/dash/movies`}><h3>Back</h3></Link>
+        </>
     );
 };
 

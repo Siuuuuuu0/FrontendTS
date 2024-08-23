@@ -27,6 +27,17 @@ const Movie: React.FC<MovieProps> = ({ movieId }) => {
             </li>
             ))}
         </ul>
+        <h3>Genres:</h3>
+        <ul className="movie-genres">
+            {movie?.genres.map((genre, index) => (
+                <li key={index}>
+                    {genre}
+                </li>
+            ))}
+        </ul>
+        <div className="movie-description">
+            {movie?.description}
+        </div>
         </div>
     );
 };

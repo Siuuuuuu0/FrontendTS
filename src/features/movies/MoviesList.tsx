@@ -5,6 +5,7 @@ import { useGetActorsQuery } from './actorsApiSlice';
 import { handleError } from '../../services/helpers';
 import ControlledInput from './ControlledInput';
 import { Link } from 'react-router-dom';
+import { GENRES } from '../../config/genres';
 
 type Actor = {
     first_name: string;
@@ -15,6 +16,7 @@ const MoviesList: React.FC = () => {
     const [releaseYear, setReleaseYear] = useState<number | undefined>();
     const [lastName, setLastName] = useState<string>('');
     const [selectedActors, setSelectedActors] = useState<{ [key: string]: Actor }>({});
+    const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
     const {
         data: movies, 
@@ -22,7 +24,7 @@ const MoviesList: React.FC = () => {
         isSuccess,
         isError, 
         error
-    } = useGetMoviesQuery({ releaseYear, actorIds: Object.keys(selectedActors) }, {
+    } = useGetMoviesQuery({ releaseYear, actorIds: Object.keys(selectedActors), genres: selectedGenres }, {
         pollingInterval: 24 * 60 * 60000,
         refetchOnFocus: true,
         refetchOnMountOrArgChange: true
@@ -65,6 +67,15 @@ const MoviesList: React.FC = () => {
         });
     };
 
+    const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selected = e.target.value;
+        setSelectedGenres([...selectedGenres, selected]);
+    };
+
+    const handleGenreRemove = (genre: string) => {
+        setSelectedGenres(prev => prev.filter(g => g !== genre));
+    };
+
     let content: JSX.Element;
 
     if (isLoading) {
@@ -75,7 +86,7 @@ const MoviesList: React.FC = () => {
         const { ids } = movies;
 
         const listContent = ids?.length
-            ? ids.map((movieId: any) => <div key={movieId}><Movie movieId={movieId} /><Link to={`/dash/movies/${movieId}`}>View Movie</Link></div>)
+            ? ids.map((movieId: any) => <div key={movieId}><Movie movieId={movieId} /><Link to={`/dash/movies/${movieId}`}><h3>View Movie</h3></Link></div>)
             : <p>No movies found for the selected filters.</p>;
 
         content = (
@@ -89,6 +100,25 @@ const MoviesList: React.FC = () => {
                         onChange={handleYearChange}
                         placeholder="Enter year"
                     />
+                </div>
+                <div className="filter">
+                    <label htmlFor="genres">Select Genres: </label>
+                    <select id="genres" onChange={handleGenreChange} value={selectedGenres}>
+                        {GENRES.map((genre) => (
+                            <option key={genre} value={genre}>{genre}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="selected-genres">
+                    <h4>Selected Genres:</h4>
+                    <ul>
+                        {selectedGenres.map((genre) => (
+                            <li key={genre}>
+                                {genre}
+                                <button onClick={() => handleGenreRemove(genre)}>Remove</button>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
                 <div className="filter">
                     <label htmlFor="lastName">Filter by Actor's Last Name: </label>

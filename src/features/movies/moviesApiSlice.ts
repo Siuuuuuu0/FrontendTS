@@ -17,13 +17,15 @@ type Movie = {
     title: string; 
     releaseYear: number; 
     director: Director; 
-    actors: Actor[] 
+    actors: Actor[], 
+    genres: string[], 
+    description: string
 };
 
 const moviesAdapter = createEntityAdapter<Movie>({
     sortComparer: (a, b) => {
-      if (a.releaseYear < b.releaseYear) return -1;
-      if (a.releaseYear > b.releaseYear) return 1;
+      if (a.releaseYear < b.releaseYear) return 1;
+      if (a.releaseYear > b.releaseYear) return -1;
       return 0;
     }
 });
@@ -32,7 +34,7 @@ const initialState = moviesAdapter.getInitialState()
 
 export const moviesApiSlice = moviesApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMovies: builder.query<EntityState<Movie, number>, { title?: string; releaseYear?: number; directorId?: number; actorIds?: string[] } | string>({
+    getMovies: builder.query<EntityState<Movie, number>, { title?: string; releaseYear?: number; directorId?: number; actorIds?: string[], genres?: string[] } | string>({
       query: (filters) => {
         const params = new URLSearchParams();
         if (typeof filters === 'object') {
@@ -40,6 +42,7 @@ export const moviesApiSlice = moviesApi.injectEndpoints({
             if (filters.releaseYear) params.append('releaseYear', filters.releaseYear.toString());
             if (filters.directorId) params.append('directorId', filters.directorId.toString());
             if (filters.actorIds) filters.actorIds.forEach(id => params.append('actorIds', id.toString()));
+            if(filters.genres) filters.genres.forEach(genre => params.append('genres', genre));
         } 
         return {
             url : `/movies?${params.toString()}`, 
